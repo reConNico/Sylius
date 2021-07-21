@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sylius package.
  *
@@ -51,5 +53,7 @@ trait SetUpTestsTrait
         $adminUser = $this->objects['admin'];
 
         $this->JWTAdminUserToken = $JWTManager->create($adminUser);
+
+        $_ENV['SYLIUS_API_ENABLED'] = true;
     }
 }

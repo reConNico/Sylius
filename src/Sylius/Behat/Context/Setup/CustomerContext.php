@@ -68,6 +68,8 @@ final class CustomerContext implements Context
         $partsOfName = explode(' ', $name);
         $customer = $this->createCustomer($email, $partsOfName[0], $partsOfName[1]);
         $this->customerRepository->add($customer);
+
+        $this->sharedStorage->set('customer', $customer);
     }
 
     /**
@@ -94,7 +96,7 @@ final class CustomerContext implements Context
      * @Given the store has customer :email with name :fullName since :since
      * @Given the store has customer :email with name :fullName and phone number :phoneNumber since :since
      */
-    public function theStoreHasCustomerWithNameAndRegistrationDate($email, $fullName, $phoneNumber = null, $since)
+    public function theStoreHasCustomerWithNameAndRegistrationDate($email, $fullName, $since, $phoneNumber = null)
     {
         $names = explode(' ', $fullName);
         $customer = $this->createCustomer($email, $names[0], $names[1], new \DateTime($since), $phoneNumber);

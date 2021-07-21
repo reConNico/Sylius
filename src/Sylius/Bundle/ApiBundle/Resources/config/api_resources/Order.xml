@@ -62,6 +62,9 @@
             <itemOperation name="shop_get">
                 <attribute name="method">GET</attribute>
                 <attribute name="path">/shop/orders/{tokenValue}</attribute>
+                <attribute name="normalization_context">
+                    <attribute name="groups">shop:cart:read</attribute>
+                </attribute>
             </itemOperation>
 
             <itemOperation name="shop_delete">
@@ -69,6 +72,9 @@
                 <attribute name="path">/shop/orders/{tokenValue}</attribute>
                 <attribute name="openapi_context">
                     <attribute name="summary">Deletes cart</attribute>
+                </attribute>
+                <attribute name="normalization_context">
+                    <attribute name="groups">shop:order:read</attribute>
                 </attribute>
             </itemOperation>
 
@@ -90,6 +96,9 @@
                 <attribute name="path">/shop/orders/{tokenValue}/items</attribute>
                 <attribute name="messenger">input</attribute>
                 <attribute name="input">Sylius\Bundle\ApiBundle\Command\Cart\AddItemToCart</attribute>
+                <attribute name="normalization_context">
+                    <attribute name="groups">shop:cart:read</attribute>
+                </attribute>
                 <attribute name="denormalization_context">
                     <attribute name="groups">shop:cart:add_item</attribute>
                 </attribute>
@@ -118,7 +127,6 @@
                 <attribute name="method">PATCH</attribute>
                 <attribute name="validation_groups">
                     <attribute>sylius</attribute>
-                    <attribute>sylius_checkout_complete</attribute>
                 </attribute>
                 <attribute name="path">/shop/orders/{tokenValue}/shipments/{shipmentId}</attribute>
                 <attribute name="messenger">input</attribute>
@@ -408,6 +416,7 @@
             <subresource resourceClass="%sylius.model.order_item.class%" />
         </property>
         <property name="notes" writable="true" />
+        <property name="itemsTotal" readable="true" />
         <property name="taxTotal" readable="true"/>
         <property name="adjustments" writable="false">
             <subresource resourceClass="%sylius.model.adjustment.class%" />

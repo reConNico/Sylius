@@ -75,7 +75,7 @@ final class OrderContext implements Context
             $this->client->getToken()
         );
 
-        $request->setContent(['paymentMethodCode' => $paymentMethod->getCode()]);
+        $request->setContent(['paymentMethod' => $this->iriConverter->getIriFromItem($paymentMethod)]);
 
         $this->client->executeCustomRequest($request);
     }
@@ -203,7 +203,8 @@ final class OrderContext implements Context
             $orderElementState,
             StringInflector::codeToName(
                 $this->responseChecker->getValue(
-                    $this->client->getLastResponse(), $elementType . 'State'
+                    $this->client->getLastResponse(),
+                    $elementType . 'State'
                 )
             )
         );
@@ -299,6 +300,14 @@ final class OrderContext implements Context
     }
 
     /**
+     * @Then I should be denied an access to order list
+     */
+    public function iShouldDeniedAnAccessToOrderList(): void
+    {
+        Assert::true($this->responseChecker->hasAccessDenied($this->client->getLastResponse()));
+    }
+
+    /**
      * @Then I should have :paymentMethod payment method on my order
      */
     public function iShouldHavePaymentMethodOnMyOrder(PaymentMethodInterface $paymentMethod): void
@@ -308,7 +317,7 @@ final class OrderContext implements Context
             ->getValue($this->client->getLastResponse(), 'payments')[0]['method']['@id']
         ;
 
-        Assert::same($this->iriConverter->getItemFromIri($paymentMethodIri)->getId(), $paymentMethod->getId());
+        Assert::same($this->iriConverter->getItemFromIri($paymentMethodIri)->getCode(), $paymentMethod->getCode());
     }
 
     private function getAdjustmentsForOrder(): array
